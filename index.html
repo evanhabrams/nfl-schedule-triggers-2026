@@ -89,13 +89,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(
 .gc-matchup { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; margin-bottom: 7px; flex-wrap: wrap; }
 .gc-matchup img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
 .gc-vs { color: var(--muted); font-weight: 400; padding: 0 2px; }
-.gc-triggers { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 7px; }
+.gc-triggers { display: flex; gap: 5px; flex-wrap: wrap; }
 .gc-pill { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 11px; font-family: 'DM Sans', sans-serif; }
 .gc-pill.pos { background: var(--pos-bg); color: var(--pos-text); }
 .gc-pill.neg { background: var(--neg-bg); color: var(--neg-text); }
 .gc-pill.active { outline: 1.5px solid currentColor; outline-offset: 1px; }
-.gc-meta { font-size: 11px; color: var(--muted); }
-.gc-meta .net { font-weight: 600; color: var(--text); }
+.gc-trig-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.gc-net { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.gc-net .net { font-weight: 600; color: var(--text); }
+.gc-line { font-size: 11px; color: var(--muted); }
 
 /* Loading */
 .loading { display: flex; align-items: center; justify-content: center; height: 200px; gap: 10px; color: var(--muted); font-size: 13px; }
@@ -337,6 +339,9 @@ function openModal(team, code) {
       return `<span class="gc-pill ${polClass}" title="${t.desc}">${t.label}</span>`;
     }).join('');
     const netStr = (g.net > 0 ? '+' : '') + g.net;
+    const spreadStr = (g.spread == null) ? 'N/A' : (g.spread > 0 ? '+' : '') + g.spread;
+    const mlStr = (g.ml == null) ? 'N/A' : (g.ml > 0 ? '+' : '') + g.ml;
+    const totalStr = (g.total == null) ? 'N/A' : g.total;
     const card = document.createElement('div');
     card.className = 'game-card';
     card.innerHTML = `
@@ -346,8 +351,11 @@ function openModal(team, code) {
         <span class="gc-vs">${sep}</span>
         <img src="${opp.logo}" alt="${opp.abbr}" onerror="this.style.display='none'"><span>${g.opp}</span>
       </div>
-      <div class="gc-triggers">${pills}</div>
-      <div class="gc-meta">Spread: N/A · Net triggers: <span class="net">${netStr}</span></div>
+      <div class="gc-trig-row">
+        <div class="gc-triggers">${pills}</div>
+        <div class="gc-net">Net triggers: <span class="net">${netStr}</span></div>
+      </div>
+      <div class="gc-line">Spread: ${spreadStr} · ML: ${mlStr} · O/U: ${totalStr}</div>
     `;
     body.appendChild(card);
   }
